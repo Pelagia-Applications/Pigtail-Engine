@@ -3,7 +3,7 @@
 #include <string>
 #include <string_view>
 
-namespace Pelagia
+namespace Pigtail
 {
 
 enum class LogLevel

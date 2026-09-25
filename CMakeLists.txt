@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.24)
 
 project(PigtailEngine
     VERSION 0.1.0
-    LANGUAGES CXX
+    LANGUAGES C CXX
 )
 
 set(CMAKE_CXX_STANDARD 20)
@@ -17,6 +17,23 @@ find_package(SDL3 CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
 
 # =========================================================
+# GLAD
+# =========================================================
+
+add_library(glad STATIC
+
+    ThirdParty/glad/src/gl.c
+
+)
+
+target_include_directories(glad
+    PUBLIC
+
+        ${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/glad/include
+
+)
+
+# =========================================================
 # Engine
 # =========================================================
 
@@ -25,20 +42,22 @@ add_library(PigtailEngine STATIC
     # Core
     Engine/src/Core/Application.cpp
     Engine/src/Core/Engine.cpp
+    Engine/src/Core/Input.cpp
     Engine/src/Core/Logger.cpp
     Engine/src/Core/Time.cpp
 
     # Window
     Engine/src/Window/Window.cpp
 
-    # Camera
-    Engine/src/Camera/Camera.cpp
-
     # Graphics
-    Engine/src/Graphics/Mesh.cpp
+    Engine/src/Graphics/GLContext.cpp
     Engine/src/Graphics/Renderer.cpp
+    Engine/src/Graphics/Mesh.cpp
     Engine/src/Graphics/Shader.cpp
     Engine/src/Graphics/Texture.cpp
+
+    # Camera
+    Engine/src/Camera/Camera.cpp
 
     # Physics
     Engine/src/Physics/PhysicsWorld.cpp
@@ -54,25 +73,23 @@ add_library(PigtailEngine STATIC
     # Scripting
     Engine/src/Scripting/Lua/LuaEngine.cpp
     Engine/src/Scripting/Python/PythonEngine.cpp
-)
 
-# =========================================================
-# Include directories
-# =========================================================
+)
 
 target_include_directories(PigtailEngine
     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/Engine/include
-)
 
-# =========================================================
-# Libraries
-# =========================================================
+        ${CMAKE_CURRENT_SOURCE_DIR}/Engine/include
+
+)
 
 target_link_libraries(PigtailEngine
     PUBLIC
+
         SDL3::SDL3
         OpenGL::GL
+        glad
+
 )
 
 # =========================================================
@@ -96,7 +113,7 @@ else()
 endif()
 
 # =========================================================
-# Sandbox / executable
+# Sandbox
 # =========================================================
 
 add_executable(PigtailSandbox
@@ -107,7 +124,9 @@ add_executable(PigtailSandbox
 
 target_link_libraries(PigtailSandbox
     PRIVATE
+
         PigtailEngine
+
 )
 
 # =========================================================
@@ -118,7 +137,9 @@ if(WIN32)
 
     target_link_libraries(PigtailEngine
         PUBLIC
+
             opengl32
+
     )
 
 endif()

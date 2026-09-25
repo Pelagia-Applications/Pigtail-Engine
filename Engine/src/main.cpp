@@ -1,17 +1,19 @@
 #include <Core/Application.hpp>
 #include <Core/Logger.hpp>
+#include <Core/Input.hpp>
 
 int main()
 {
-    Pelagia::Logger::info(
+    Pigtail::Logger::info(
         "Starting Pigtail Engine."
     );
 
-    Pelagia::Application application;
+    Pigtail::Application application;
+    Pigtail::Input::initialize();
 
     if (!application.initialize())
     {
-        Pelagia::Logger::error(
+        Pigtail::Logger::error(
             "Failed to initialize Pigtail Engine."
         );
 
@@ -20,7 +22,8 @@ int main()
 
     application.run();
 
-    Pelagia::Logger::info(
+
+    Pigtail::Logger::info(
         "Pigtail Engine exited normally."
     );
 

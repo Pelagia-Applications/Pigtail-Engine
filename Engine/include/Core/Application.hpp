@@ -3,8 +3,9 @@
 #include <memory>
 
 #include <Window/Window.hpp>
+#include <Graphics/Renderer.hpp>
 
-namespace Pelagia
+namespace Pigtail
 {
 
 class Application
@@ -27,6 +28,8 @@ public:
 private:
 
     std::unique_ptr<Window> m_window;
+
+    std::unique_ptr<Renderer> m_renderer;
 
     bool m_running = false;
 };

@@ -1,24 +1,42 @@
 #include <Core/Application.hpp>
-
+#include <Core/Input.hpp>
 #include <Core/Logger.hpp>
+#include <Window/Window.hpp>
+#include <Graphics/Renderer.hpp>
+#include <Graphics/GLContext.hpp>
 
-namespace Pelagia
+
+namespace Pigtail
 {
 
-Application::Application() = default;
+Pigtail::Application::Application() = default;
 
-Application::~Application()
+Pigtail::Application::~Application()
 {
     shutdown();
 }
 
-bool Application::initialize()
+bool Pigtail::Application::initialize()
 {
-    Logger::info("================================");
-    Logger::info("      Pigtail Engine 0.1.0");
-    Logger::info("================================");
+    Logger::info(
+        "================================"
+    );
 
-    Logger::info("Initializing application...");
+    Logger::info(
+        "      Pigtail Engine 0.1.0"
+    );
+
+    Logger::info(
+        "================================"
+    );
+
+    Logger::info(
+        "Initializing application..."
+    );
+
+    // -----------------------------------------------------
+    // Window
+    // -----------------------------------------------------
 
     m_window = std::make_unique<Window>(
         "Pigtail Engine",
@@ -29,7 +47,35 @@ bool Application::initialize()
     if (!m_window->initialize())
     {
         Logger::error(
-            "Application initialization failed."
+            "Failed to initialize window."
+        );
+
+        return false;
+    }
+
+    // -----------------------------------------------------
+    // OpenGL / GLAD
+    // -----------------------------------------------------
+
+    if (!GLContext::initialize())
+    {
+        Logger::error(
+            "Failed to initialize OpenGL."
+        );
+
+        return false;
+    }
+
+    // -----------------------------------------------------
+    // Renderer
+    // -----------------------------------------------------
+
+    m_renderer = std::make_unique<Renderer>();
+
+    if (!m_renderer->initialize())
+    {
+        Logger::error(
+            "Failed to initialize renderer."
         );
 
         return false;
@@ -44,36 +90,65 @@ bool Application::initialize()
     return true;
 }
 
-void Application::run()
+void Pigtail::Application::run()
 {
-    Logger::info("Entering main loop.");
+    Logger::info(
+        "Entering main loop."
+    );
 
-    while (m_running && !m_window->shouldClose())
+    while (
+        m_running &&
+        !m_window->shouldClose()
+    )
     {
         m_window->pollEvents();
 
-        // Rendering will go here later.
+        m_renderer->beginFrame();
+
+        m_renderer->clear();
+
+        m_renderer->endFrame();
 
         m_window->swapBuffers();
     }
 
-    Logger::info("Leaving main loop.");
+    Logger::info(
+        "Leaving main loop."
+    );
 }
 
-void Application::shutdown()
+void Pigtail::Application::shutdown()
 {
-    if (!m_running && !m_window)
+    if (!m_running &&
+        !m_window &&
+        !m_renderer)
     {
         return;
     }
 
-    Logger::info("Shutting down application...");
+    Logger::info(
+        "Shutting down application..."
+    );
 
-    m_window.reset();
+    if (m_renderer)
+    {
+        m_renderer->shutdown();
+
+        m_renderer.reset();
+    }
+
+    GLContext::shutdown();
+
+    if (m_window)
+    {
+        m_window.reset();
+    }
 
     m_running = false;
 
-    Logger::info("Application shutdown complete.");
+    Logger::info(
+        "Application shutdown complete."
+    );
 }
 
 }

@@ -2,7 +2,7 @@
 
 #include <Core/Logger.hpp>
 
-namespace Pelagia
+namespace Pigtail
 {
 
 Window::Window(

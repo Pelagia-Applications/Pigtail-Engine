@@ -4,7 +4,7 @@
 
 #include <SDL3/SDL.h>
 
-namespace Pelagia
+namespace Pigtail
 {
 
 class Window

@@ -7,7 +7,7 @@
 #include <windows.h>
 #endif
 
-namespace Pelagia
+namespace Pigtail
 {
 
 void Logger::debug(std::string_view message)
