@@ -1,31 +1,30 @@
-#include <Core/Application.hpp>
-#include <Core/Logger.hpp>
-#include <Core/Input.hpp>
+#include "Core/Application.hpp"
+#include "Audio/Audio.hpp"
+
+#include <memory>
 
 int main()
 {
-    Pigtail::Logger::info(
-        "Starting Pigtail Engine."
-    );
+    Pigtail::Application app;
 
-    Pigtail::Application application;
-    Pigtail::Input::initialize();
+    if (!app.initialize())
+        return -1;
 
-    if (!application.initialize())
-    {
-        Pigtail::Logger::error(
-            "Failed to initialize Pigtail Engine."
+    auto sound =
+        Pigtail::Audio::loadSound(
+            "assets/audio/test.wav"
         );
 
-        return 1;
+    if (sound)
+    {
+        Pigtail::Audio::play(
+            sound,
+            1.0f,
+            false
+        );
     }
 
-    application.run();
-
-
-    Pigtail::Logger::info(
-        "Pigtail Engine exited normally."
-    );
+    app.run();
 
     return 0;
 }

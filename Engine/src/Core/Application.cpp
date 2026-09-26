@@ -5,6 +5,7 @@
 #include <Window/Window.hpp>
 #include <Graphics/Renderer.hpp>
 #include <Graphics/GLContext.hpp>
+#include <Audio/Audio.hpp>
 
 
 namespace Pigtail
@@ -70,6 +71,17 @@ bool Pigtail::Application::initialize()
         return false;
     }
 
+    // -------------------------------------------------------
+    // Audio
+    // -------------------------------------------------------
+
+    if (!Audio::initialize())
+    {
+        Logger::error(
+            "Failed to initialize audio."
+        );
+        return false;
+    }
     // -----------------------------------------------------
     // Renderer
     // -----------------------------------------------------
@@ -114,9 +126,13 @@ void Pigtail::Application::run()
         !m_window->shouldClose()
     )
     {
+        Input::beginFrame();
+
         m_window->pollEvents();
 
         m_renderer->beginFrame();
+
+        Audio::update();
 
         m_renderer->clear();
 
