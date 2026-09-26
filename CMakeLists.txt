@@ -58,6 +58,9 @@ add_library(PigtailEngine STATIC
     Engine/src/Graphics/Shader.cpp
     Engine/src/Graphics/Texture.cpp
     Engine/src/Graphics/ShapeRenderer.cpp
+    Engine/src/Graphics/VertexBuffer.cpp
+    Engine/src/Graphics/VertexArray.cpp
+    Engine/src/Graphics/IndexBuffer.cpp
 
     # Audio
     Engine/src/Audio/Audio.cpp
