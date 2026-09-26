@@ -65,6 +65,8 @@ add_library(PigtailEngine STATIC
     # Math
     Engine/src/Math/Vector2.cpp
     Engine/src/Math/Vector3.cpp
+    Engine/src/Math/Vector4.cpp
+    Engine/src/Math/Matrix4.cpp
 
     # Physics
     Engine/src/Physics/PhysicsWorld.cpp
