@@ -3,7 +3,7 @@
 #include <Core/Logger.hpp>
 #include <Graphics/GLContext.hpp>
 
-#include <glad/gl.h>
+#include <glad/glad.h>
 
 namespace Pigtail
 {

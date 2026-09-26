@@ -22,7 +22,7 @@ find_package(OpenGL REQUIRED)
 
 add_library(glad STATIC
 
-    ThirdParty/glad/src/gl.c
+    ThirdParty/glad/src/glad.c
 
 )
 
@@ -57,9 +57,6 @@ add_library(PigtailEngine STATIC
     Engine/src/Graphics/Shader.cpp
     Engine/src/Graphics/Texture.cpp
 
-    # Camera
-    Engine/src/Camera/Camera.cpp
-
     # Physics
     Engine/src/Physics/PhysicsWorld.cpp
 
@@ -77,11 +74,9 @@ add_library(PigtailEngine STATIC
 
 )
 
-target_include_directories(PigtailEngine
-    PUBLIC
-
-        ${CMAKE_CURRENT_SOURCE_DIR}/Engine/include
-
+target_include_directories(PigtailEngine PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/Engine/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/glad/include"
 )
 
 target_link_libraries(PigtailEngine
@@ -128,6 +123,11 @@ target_link_libraries(PigtailSandbox
 
         PigtailEngine
 
+)
+
+target_include_directories(PigtailSandbox PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/Engine/include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/ThirdParty/glad/include"
 )
 
 # =========================================================

@@ -2,7 +2,7 @@
 
 #include "Core/Logger.hpp"
 
-#include <glad/gl.h>
+#include <glad/glad.h>
 
 #include <SDL3/SDL.h>
 
