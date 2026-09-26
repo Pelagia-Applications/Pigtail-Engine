@@ -9,7 +9,10 @@
 namespace Pigtail
 {
 
-Pigtail::Application::Application() = default;
+Pigtail::Application::Application()
+    : m_camera(1280.0f, 720.0f)
+{
+}
 
 Pigtail::Application::~Application()
 {
