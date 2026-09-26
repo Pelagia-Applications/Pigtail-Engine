@@ -1,11 +1,11 @@
-#include "Math/Vector4.hpp"
+#include "Math/Vec4.hpp"
 
 #include <cmath>
 
 namespace Pigtail
 {
 
-Vector4::Vector4()
+Vec4::Vec4()
     : x(0.0f),
       y(0.0f),
       z(0.0f),
@@ -13,7 +13,7 @@ Vector4::Vector4()
 {
 }
 
-Vector4::Vector4(
+Vec4::Vec4(
     float x,
     float y,
     float z,
@@ -26,8 +26,8 @@ Vector4::Vector4(
 {
 }
 
-Vector4::Vector4(
-    const Vector3& vector,
+Vec4::Vec4(
+    const Vec3& vector,
     float w
 )
     : x(vector.x),
@@ -37,9 +37,9 @@ Vector4::Vector4(
 {
 }
 
-Vector4 Vector4::zero()
+Vec4 Vec4::zero()
 {
-    return Vector4(
+    return Vec4(
         0.0f,
         0.0f,
         0.0f,
@@ -47,9 +47,9 @@ Vector4 Vector4::zero()
     );
 }
 
-Vector4 Vector4::one()
+Vec4 Vec4::one()
 {
-    return Vector4(
+    return Vec4(
         1.0f,
         1.0f,
         1.0f,
@@ -57,7 +57,7 @@ Vector4 Vector4::one()
     );
 }
 
-float Vector4::length() const
+float Vec4::length() const
 {
     return std::sqrt(
         x * x +
@@ -67,7 +67,7 @@ float Vector4::length() const
     );
 }
 
-float Vector4::lengthSquared() const
+float Vec4::lengthSquared() const
 {
     return
         x * x +
@@ -76,14 +76,14 @@ float Vector4::lengthSquared() const
         w * w;
 }
 
-Vector4 Vector4::normalized() const
+Vec4 Vec4::normalized() const
 {
     const float len = length();
 
     if (len <= 0.000001f)
-        return Vector4::zero();
+        return Vec4::zero();
 
-    return Vector4(
+    return Vec4(
         x / len,
         y / len,
         z / len,
@@ -91,7 +91,7 @@ Vector4 Vector4::normalized() const
     );
 }
 
-void Vector4::normalize()
+void Vec4::normalize()
 {
     const float len = length();
 
@@ -110,7 +110,7 @@ void Vector4::normalize()
     w /= len;
 }
 
-float Vector4::dot(const Vector4& other) const
+float Vec4::dot(const Vec4& other) const
 {
     return
         x * other.x +
@@ -119,9 +119,9 @@ float Vector4::dot(const Vector4& other) const
         w * other.w;
 }
 
-float Vector4::dot(
-    const Vector4& a,
-    const Vector4& b
+float Vec4::dot(
+    const Vec4& a,
+    const Vec4& b
 )
 {
     return
@@ -131,9 +131,9 @@ float Vector4::dot(
         a.w * b.w;
 }
 
-Vector4 Vector4::operator+(const Vector4& other) const
+Vec4 Vec4::operator+(const Vec4& other) const
 {
-    return Vector4(
+    return Vec4(
         x + other.x,
         y + other.y,
         z + other.z,
@@ -141,9 +141,9 @@ Vector4 Vector4::operator+(const Vector4& other) const
     );
 }
 
-Vector4 Vector4::operator-(const Vector4& other) const
+Vec4 Vec4::operator-(const Vec4& other) const
 {
-    return Vector4(
+    return Vec4(
         x - other.x,
         y - other.y,
         z - other.z,
@@ -151,9 +151,9 @@ Vector4 Vector4::operator-(const Vector4& other) const
     );
 }
 
-Vector4 Vector4::operator*(float scalar) const
+Vec4 Vec4::operator*(float scalar) const
 {
-    return Vector4(
+    return Vec4(
         x * scalar,
         y * scalar,
         z * scalar,
@@ -161,9 +161,9 @@ Vector4 Vector4::operator*(float scalar) const
     );
 }
 
-Vector4 Vector4::operator/(float scalar) const
+Vec4 Vec4::operator/(float scalar) const
 {
-    return Vector4(
+    return Vec4(
         x / scalar,
         y / scalar,
         z / scalar,
@@ -171,7 +171,7 @@ Vector4 Vector4::operator/(float scalar) const
     );
 }
 
-Vector4& Vector4::operator+=(const Vector4& other)
+Vec4& Vec4::operator+=(const Vec4& other)
 {
     x += other.x;
     y += other.y;
@@ -181,7 +181,7 @@ Vector4& Vector4::operator+=(const Vector4& other)
     return *this;
 }
 
-Vector4& Vector4::operator-=(const Vector4& other)
+Vec4& Vec4::operator-=(const Vec4& other)
 {
     x -= other.x;
     y -= other.y;
@@ -191,7 +191,7 @@ Vector4& Vector4::operator-=(const Vector4& other)
     return *this;
 }
 
-Vector4& Vector4::operator*=(float scalar)
+Vec4& Vec4::operator*=(float scalar)
 {
     x *= scalar;
     y *= scalar;
@@ -201,7 +201,7 @@ Vector4& Vector4::operator*=(float scalar)
     return *this;
 }
 
-Vector4& Vector4::operator/=(float scalar)
+Vec4& Vec4::operator/=(float scalar)
 {
     x /= scalar;
     y /= scalar;
@@ -211,9 +211,9 @@ Vector4& Vector4::operator/=(float scalar)
     return *this;
 }
 
-Vector4 Vector4::operator-() const
+Vec4 Vec4::operator-() const
 {
-    return Vector4(
+    return Vec4(
         -x,
         -y,
         -z,
@@ -221,7 +221,7 @@ Vector4 Vector4::operator-() const
     );
 }
 
-bool Vector4::operator==(const Vector4& other) const
+bool Vec4::operator==(const Vec4& other) const
 {
     return
         x == other.x &&
@@ -230,14 +230,14 @@ bool Vector4::operator==(const Vector4& other) const
         w == other.w;
 }
 
-bool Vector4::operator!=(const Vector4& other) const
+bool Vec4::operator!=(const Vec4& other) const
 {
     return !(*this == other);
 }
 
-Vector4 operator*(
+Vec4 operator*(
     float scalar,
-    const Vector4& vector
+    const Vec4& vector
 )
 {
     return vector * scalar;

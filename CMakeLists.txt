@@ -63,10 +63,12 @@ add_library(PigtailEngine STATIC
     Engine/src/Audio/Sound.cpp
 
     # Math
-    Engine/src/Math/Vector2.cpp
-    Engine/src/Math/Vector3.cpp
-    Engine/src/Math/Vector4.cpp
-    Engine/src/Math/Matrix4.cpp
+    Engine/src/Math/Vec2.cpp
+    Engine/src/Math/Vec3.cpp
+    Engine/src/Math/Vec4.cpp
+    Engine/src/Math/Mat4.cpp
+    Engine/src/Math/Mat3.cpp
+    Engine/src/Math/Quaternion.cpp
 
     # Physics
     Engine/src/Physics/PhysicsWorld.cpp

@@ -1,4 +1,4 @@
-#include "Math/Matrix4.hpp"
+#include "Math/Mat4.hpp"
 
 #include <cmath>
 #include <algorithm>
@@ -6,12 +6,12 @@
 namespace Pigtail
 {
 
-Matrix4::Matrix4()
+Mat4::Mat4()
     : m{}
 {
 }
 
-Matrix4::Matrix4(float diagonal)
+Mat4::Mat4(float diagonal)
     : m{}
 {
     m[0]  = diagonal;
@@ -20,16 +20,16 @@ Matrix4::Matrix4(float diagonal)
     m[15] = diagonal;
 }
 
-Matrix4 Matrix4::identity()
+Mat4 Mat4::identity()
 {
-    return Matrix4(1.0f);
+    return Mat4(1.0f);
 }
 
-Matrix4 Matrix4::translation(
-    const Vector3& position
+Mat4 Mat4::translation(
+    const Vec3& position
 )
 {
-    Matrix4 result = Matrix4::identity();
+    Mat4 result = Mat4::identity();
 
     result.m[12] = position.x;
     result.m[13] = position.y;
@@ -38,11 +38,11 @@ Matrix4 Matrix4::translation(
     return result;
 }
 
-Matrix4 Matrix4::scale(
-    const Vector3& scale
+Mat4 Mat4::scale(
+    const Vec3& scale
 )
 {
-    Matrix4 result;
+    Mat4 result;
 
     result.m[0]  = scale.x;
     result.m[5]  = scale.y;
@@ -52,11 +52,11 @@ Matrix4 Matrix4::scale(
     return result;
 }
 
-Matrix4 Matrix4::rotationX(
+Mat4 Mat4::rotationX(
     float radians
 )
 {
-    Matrix4 result = Matrix4::identity();
+    Mat4 result = Mat4::identity();
 
     const float c = std::cos(radians);
     const float s = std::sin(radians);
@@ -69,11 +69,11 @@ Matrix4 Matrix4::rotationX(
     return result;
 }
 
-Matrix4 Matrix4::rotationY(
+Mat4 Mat4::rotationY(
     float radians
 )
 {
-    Matrix4 result = Matrix4::identity();
+    Mat4 result = Mat4::identity();
 
     const float c = std::cos(radians);
     const float s = std::sin(radians);
@@ -86,11 +86,11 @@ Matrix4 Matrix4::rotationY(
     return result;
 }
 
-Matrix4 Matrix4::rotationZ(
+Mat4 Mat4::rotationZ(
     float radians
 )
 {
-    Matrix4 result = Matrix4::identity();
+    Mat4 result = Mat4::identity();
 
     const float c = std::cos(radians);
     const float s = std::sin(radians);
@@ -103,14 +103,14 @@ Matrix4 Matrix4::rotationZ(
     return result;
 }
 
-Matrix4 Matrix4::perspective(
+Mat4 Mat4::perspective(
     float fovRadians,
     float aspect,
     float nearPlane,
     float farPlane
 )
 {
-    Matrix4 result;
+    Mat4 result;
 
     const float tanHalfFov =
         std::tan(fovRadians * 0.5f);
@@ -134,7 +134,7 @@ Matrix4 Matrix4::perspective(
     return result;
 }
 
-Matrix4 Matrix4::orthographic(
+Mat4 Mat4::orthographic(
     float left,
     float right,
     float bottom,
@@ -143,7 +143,7 @@ Matrix4 Matrix4::orthographic(
     float farPlane
 )
 {
-    Matrix4 result = Matrix4::identity();
+    Mat4 result = Mat4::identity();
 
     result.m[0] =
         2.0f / (right - left);
@@ -169,22 +169,22 @@ Matrix4 Matrix4::orthographic(
     return result;
 }
 
-Matrix4 Matrix4::lookAt(
-    const Vector3& position,
-    const Vector3& target,
-    const Vector3& up
+Mat4 Mat4::lookAt(
+    const Vec3& position,
+    const Vec3& target,
+    const Vec3& up
 )
 {
-    const Vector3 forward =
+    const Vec3 forward =
         (target - position).normalized();
 
-    const Vector3 right =
-        Vector3::cross(forward, up).normalized();
+    const Vec3 right =
+        Vec3::cross(forward, up).normalized();
 
-    const Vector3 cameraUp =
-        Vector3::cross(right, forward);
+    const Vec3 cameraUp =
+        Vec3::cross(right, forward);
 
-    Matrix4 result = Matrix4::identity();
+    Mat4 result = Mat4::identity();
 
     result.m[0] = right.x;
     result.m[1] = cameraUp.x;
@@ -199,20 +199,20 @@ Matrix4 Matrix4::lookAt(
     result.m[10] = -forward.z;
 
     result.m[12] =
-        -Vector3::dot(right, position);
+        -Vec3::dot(right, position);
 
     result.m[13] =
-        -Vector3::dot(cameraUp, position);
+        -Vec3::dot(cameraUp, position);
 
     result.m[14] =
-        Vector3::dot(forward, position);
+        Vec3::dot(forward, position);
 
     return result;
 }
 
-Matrix4 Matrix4::transposed() const
+Mat4 Mat4::transposed() const
 {
-    Matrix4 result;
+    Mat4 result;
 
     for (int row = 0; row < 4; ++row)
     {
@@ -226,9 +226,9 @@ Matrix4 Matrix4::transposed() const
     return result;
 }
 
-Matrix4 Matrix4::inverted() const
+Mat4 Mat4::inverted() const
 {
-    Matrix4 result;
+    Mat4 result;
 
     const float* a = m;
     float* inv = result.m;
@@ -368,7 +368,7 @@ Matrix4 Matrix4::inverted() const
         a[3] * inv[12];
 
     if (std::abs(determinant) <= 0.000001f)
-        return Matrix4::identity();
+        return Mat4::identity();
 
     const float inverseDeterminant =
         1.0f / determinant;
@@ -379,9 +379,9 @@ Matrix4 Matrix4::inverted() const
     return result;
 }
 
-Vector4 Matrix4::operator*(const Vector4& vector) const
+Vec4 Mat4::operator*(const Vec4& vector) const
 {
-    return Vector4(
+    return Vec4(
         m[0]  * vector.x +
         m[4]  * vector.y +
         m[8]  * vector.z +
@@ -404,9 +404,9 @@ Vector4 Matrix4::operator*(const Vector4& vector) const
     );
 }
 
-Matrix4 Matrix4::operator*(const Matrix4& other) const
+Mat4 Mat4::operator*(const Mat4& other) const
 {
-    Matrix4 result;
+    Mat4 result;
 
     for (int column = 0; column < 4; ++column)
     {
@@ -423,14 +423,14 @@ Matrix4 Matrix4::operator*(const Matrix4& other) const
     return result;
 }
 
-Matrix4& Matrix4::operator*=(const Matrix4& other)
+Mat4& Mat4::operator*=(const Mat4& other)
 {
     *this = *this * other;
 
     return *this;
 }
 
-float& Matrix4::operator()(
+float& Mat4::operator()(
     int row,
     int column
 )
@@ -438,7 +438,7 @@ float& Matrix4::operator()(
     return m[column * 4 + row];
 }
 
-float Matrix4::operator()(
+float Mat4::operator()(
     int row,
     int column
 ) const
@@ -446,12 +446,12 @@ float Matrix4::operator()(
     return m[column * 4 + row];
 }
 
-const float* Matrix4::data() const
+const float* Mat4::data() const
 {
     return m;
 }
 
-float* Matrix4::data()
+float* Mat4::data()
 {
     return m;
 }
