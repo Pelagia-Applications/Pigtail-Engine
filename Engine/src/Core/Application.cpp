@@ -1,27 +1,41 @@
 #include <Core/Application.hpp>
 #include <Core/Input.hpp>
 #include <Core/Logger.hpp>
-#include <Core/ShapeRenderer.hpp>
+#include <Graphics/ShapeRenderer.hpp>
+#include <Core/Time.hpp>
+
 #include <Window/Window.hpp>
+
 #include <Graphics/Renderer.hpp>
 #include <Graphics/GLContext.hpp>
+#include <Graphics/Shader.hpp>
+#include <Graphics/Mesh.hpp>
+#include <Graphics/Camera2D.hpp>
+#include <Graphics/Camera3D.hpp>
+
 #include <Audio/Audio.hpp>
+
+#include <Math/Transform.hpp>
+#include <Math/Math.hpp>
+
+#include <glad/glad.h>
 
 
 namespace Pigtail
 {
 
-Pigtail::Application::Application()
+Application::Application()
     : m_Camera2D(1280.0f, 720.0f)
 {
 }
 
-Pigtail::Application::~Application()
+Application::~Application()
 {
     shutdown();
 }
 
-bool Pigtail::Application::initialize()
+
+bool Application::initialize()
 {
     Logger::info(
         "================================"
@@ -38,6 +52,7 @@ bool Pigtail::Application::initialize()
     Logger::info(
         "Initializing application..."
     );
+
 
     // -----------------------------------------------------
     // Window
@@ -58,6 +73,12 @@ bool Pigtail::Application::initialize()
         return false;
     }
 
+    // ------------------------------------------------------
+    // Time
+    // -----------------------------------------------------
+
+    Time::initialize();
+
     // -----------------------------------------------------
     // OpenGL / GLAD
     // -----------------------------------------------------
@@ -71,17 +92,30 @@ bool Pigtail::Application::initialize()
         return false;
     }
 
-    // -------------------------------------------------------
+
+    // -----------------------------------------------------
+    // Depth testing
+    // -----------------------------------------------------
+
+    glEnable(GL_DEPTH_TEST);
+
+    glDepthFunc(GL_LESS);
+
+
+    // -----------------------------------------------------
     // Audio
-    // -------------------------------------------------------
+    // -----------------------------------------------------
 
     if (!Audio::initialize())
     {
         Logger::error(
             "Failed to initialize audio."
         );
+
         return false;
     }
+
+
     // -----------------------------------------------------
     // Renderer
     // -----------------------------------------------------
@@ -97,6 +131,11 @@ bool Pigtail::Application::initialize()
         return false;
     }
 
+
+    // -----------------------------------------------------
+    // Shape Renderer
+    // -----------------------------------------------------
+
     if (!m_shapeRenderer.initialize())
     {
         Logger::error(
@@ -105,6 +144,7 @@ bool Pigtail::Application::initialize()
 
         return false;
     }
+
 
     m_running = true;
 
@@ -115,20 +155,111 @@ bool Pigtail::Application::initialize()
     return true;
 }
 
-void Pigtail::Application::run()
+
+void Application::run()
 {
     Logger::info(
         "Entering main loop."
     );
+
+
+    // =====================================================
+    // 3D SHADER
+    // =====================================================
+
+    Shader shader;
+
+    if (!shader.loadFromFiles(
+        "Assets/Shaders/basic3d.vert",
+        "Assets/Shaders/basic3d.frag"
+    ))
+    {
+        Logger::error(
+            "Failed to load 3D shader."
+        );
+
+        m_running = false;
+        return;
+    }
+
+
+    // =====================================================
+    // CUBE
+    // =====================================================
+
+    Mesh cube = Mesh::createCube();
+
+    if (!cube.isValid())
+    {
+        Logger::error(
+            "Failed to create cube mesh."
+        );
+
+        m_running = false;
+        return;
+    }
+
+
+    // =====================================================
+    // CUBE TRANSFORM AND ROTATION
+    // =====================================================
+
+    Transform cubeTransform;
+
+    cubeTransform.setPosition(
+        Vec3(
+            0.0f,
+            0.0f,
+            0.0f
+        )
+    );
+
+    float angle = 0.0f;
+
+    // =====================================================
+    // 3D CAMERA
+    // =====================================================
+
+    Camera3D camera;
+
+    camera.setPosition(
+        Vec3(
+            0.0f,
+            0.0f,
+            3.0f
+        )
+    );
+
+    camera.setPerspective(
+        Math::radians(60.0f),
+        1280.0f / 720.0f,
+        0.1f,
+        100.0f
+    );
+    
+    angle = 0.0f;
+
+    // =====================================================
+    // MAIN LOOP
+    // =====================================================
 
     while (
         m_running &&
         !m_window->shouldClose()
     )
     {
+        // -------------------------------------------------
+        // Input
+        // -------------------------------------------------
+
         Input::beginFrame();
 
         m_window->pollEvents();
+
+
+        // -------------------------------------------------
+        // Renderer
+        // -------------------------------------------------
 
         m_renderer->beginFrame();
 
@@ -136,59 +267,183 @@ void Pigtail::Application::run()
 
         m_renderer->clear();
 
-        m_shapeRenderer.begin(m_Camera2D);
+        // -------------------------------------------------
+        // Time
+        // -------------------------------------------------
 
-        m_shapeRenderer.drawRectangle(
-            glm::vec2(0.0f, 0.0f),
-            glm::vec2(200.0f, 100.0f),
-            glm::vec4(1.0f, 0.2f, 0.2f, 1.0f)
+        Time::update();
+
+
+        // =================================================
+        // 3D RENDERING
+        // =================================================
+
+        Mat4 model =
+        Mat4::translation(cubeTransform.position) *
+        Mat4::rotation(
+            Quaternion::fromEuler(
+                angle * 0.7f,
+                angle,
+                0.0f
+            )
+        ) *
+        
+        Mat4::scale(cubeTransform.scale);
+
+        shader.bind();
+
+        shader.setMat4(
+            "u_viewProjection",
+            camera.viewProjectionMatrix()
         );
 
+        shader.setMat4(
+            "u_model",
+            model
+        );
+
+        shader.setVec4(
+            "u_color",
+            Vec4(0.2f, 0.6f, 1.0f, 1.0f)
+        );
+
+        shader.setVec3(
+            "u_lightDirection",
+            Vec3(-1.0f, -1.0f, -1.0f)
+        );
+
+        shader.setVec3(
+            "u_lightColor",
+            Vec3(1.0f, 1.0f, 1.0f)
+        );
+
+        angle += Time::deltaTime();
+        
+        cube.draw();
+
+        shader.unbind();
+
+
+        shader.unbind();
+
+
+        // =================================================
+        // 2D RENDERING
+        // =================================================
+
+        m_shapeRenderer.begin(
+            m_Camera2D
+        );
+
+
+        m_shapeRenderer.drawRectangle(
+            Vec2(
+                0.0f,
+                0.0f
+            ),
+            Vec2(
+                200.0f,
+                100.0f
+            ),
+            Vec4(
+                1.0f,
+                0.2f,
+                0.2f,
+                1.0f
+            )
+        );
+
+
+
         m_shapeRenderer.drawRectangleOutline(
-            glm::vec2(0.0f, 0.0f),
-            glm::vec2(220.0f, 120.0f),
-            glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+            Vec2(
+                0.0f,
+                0.0f
+            ),
+            Vec2(
+                220.0f,
+                120.0f
+            ),
+            Vec4(
+                1.0f,
+                1.0f,
+                1.0f,
+                1.0f
+            ),
             0.0f,
             3.0f
         );
 
+
         m_shapeRenderer.drawLine(
-            glm::vec2(-300.0f, -100.0f),
-            glm::vec2(300.0f, -100.0f),
-            glm::vec4(0.2f, 1.0f, 0.2f, 1.0f),
+            Vec2(
+                -300.0f,
+                -100.0f
+            ),
+            Vec2(
+                300.0f,
+                -100.0f
+            ),
+            Vec4(
+                0.2f,
+                1.0f,
+                0.2f,
+                1.0f
+            ),
             4.0f
         );
 
+
         m_shapeRenderer.drawCircle(
-            glm::vec2(300.0f, 100.0f),
+            Vec2(
+                300.0f,
+                100.0f
+            ),
             50.0f,
-            glm::vec4(0.2f, 0.5f, 1.0f, 1.0f)
+            Vec4(
+                0.2f,
+                0.5f,
+                1.0f,
+                1.0f
+            )
         );
 
+
         m_shapeRenderer.end();
+
+
+        // -------------------------------------------------
+        // End frame
+        // -------------------------------------------------
 
         m_renderer->endFrame();
 
         m_window->swapBuffers();
     }
 
+
     Logger::info(
         "Leaving main loop."
     );
 }
 
-void Pigtail::Application::shutdown()
+
+void Application::shutdown()
 {
-    if (!m_running &&
+    if (
+        !m_running &&
         !m_window &&
-        !m_renderer)
+        !m_renderer
+    )
     {
         return;
     }
 
+
     Logger::info(
         "Shutting down application..."
     );
+
 
     if (m_renderer)
     {
@@ -197,16 +452,24 @@ void Pigtail::Application::shutdown()
         m_renderer.reset();
     }
 
+
     m_shapeRenderer.shutdown();
 
+
+    Audio::shutdown();
+
+
     GLContext::shutdown();
+
 
     if (m_window)
     {
         m_window.reset();
     }
 
+
     m_running = false;
+
 
     Logger::info(
         "Application shutdown complete."

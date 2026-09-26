@@ -59,13 +59,16 @@ public:
 
     Mat4& operator*=(const Mat4& other);
 
-    float* operator[](int row);
-    const float* operator[](int row) const;
+    float* operator[](int column);
+    const float* operator[](int column) const;
 
     float& operator()(int row, int column);
     float operator()(int row, int column) const;
 
-    const float* data() const;
+    const float* data() const
+    {
+        return m;
+    }
     float* data();
 };
 

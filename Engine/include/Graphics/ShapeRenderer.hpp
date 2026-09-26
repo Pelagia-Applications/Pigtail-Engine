@@ -1,9 +1,7 @@
 #pragma once
 
-#include <cstdint>
-
-#include <glad/glad.h>
-#include <glm/glm.hpp>
+#include <Math/Vec2.hpp>
+#include <Math/Vec4.hpp>
 
 namespace Pigtail
 {
@@ -23,35 +21,35 @@ public:
     bool initialize();
     void shutdown();
 
-    void begin(const Camera2D& Camera2D);
+    void begin(const Camera2D& camera);
     void end();
 
     void drawRectangle(
-        const glm::vec2& position,
-        const glm::vec2& size,
-        const glm::vec4& color,
+        const Vec2& position,
+        const Vec2& size,
+        const Vec4& color,
         float rotation = 0.0f
     );
 
     void drawRectangleOutline(
-        const glm::vec2& position,
-        const glm::vec2& size,
-        const glm::vec4& color,
+        const Vec2& position,
+        const Vec2& size,
+        const Vec4& color,
         float rotation = 0.0f,
         float thickness = 1.0f
     );
 
     void drawLine(
-        const glm::vec2& start,
-        const glm::vec2& end,
-        const glm::vec4& color,
+        const Vec2& start,
+        const Vec2& end,
+        const Vec4& color,
         float thickness = 1.0f
     );
 
     void drawCircle(
-        const glm::vec2& center,
+        const Vec2& center,
         float radius,
-        const glm::vec4& color,
+        const Vec4& color,
         int segments = 32
     );
 
@@ -60,21 +58,22 @@ private:
     void destroyBuffers();
 
     void drawQuad(
-        const glm::vec2& position,
-        const glm::vec2& size,
-        const glm::vec4& color,
+        const Vec2& position,
+        const Vec2& size,
+        const Vec4& color,
         float rotation
     );
 
 private:
-    GLuint m_vao;
-    GLuint m_vbo;
+    Shader* m_shader = nullptr;
 
-    Shader* m_shader;
-    const Camera2D* m_Camera2D;
+    unsigned int m_vao = 0;
+    unsigned int m_vbo = 0;
 
-    bool m_initialized;
-    bool m_drawing;
+    const Camera2D* m_camera = nullptr;
+
+    bool m_initialized = false;
+    bool m_drawing = false;
 };
 
 }

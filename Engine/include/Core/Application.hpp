@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include <Core/ShapeRenderer.hpp>
+#include <Graphics/ShapeRenderer.hpp>
 #include <Window/Window.hpp>
 #include <Graphics/Renderer.hpp>
 #include <Graphics/Camera2D.hpp>

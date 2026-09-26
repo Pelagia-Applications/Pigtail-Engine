@@ -19,8 +19,8 @@ public:
     static Mat3 scale(float x, float y);
     static Mat3 translation(float x, float y);
 
-    float* operator[](int row);
-    const float* operator[](int row) const;
+float* operator[](int column);
+const float* operator[](int column) const;
 
     Mat3 operator*(const Mat3& other) const;
     Vec3 operator*(const Vec3& vector) const;

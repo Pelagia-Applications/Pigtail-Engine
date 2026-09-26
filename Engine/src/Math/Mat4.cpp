@@ -54,7 +54,7 @@ Mat4 Mat4::scale(
 
 Mat4 Mat4::rotation(const Quaternion& q)
 {
-    Mat4 result(1.0f);
+    Mat4 result = Mat4::identity();
 
     const float xx = q.x * q.x;
     const float yy = q.y * q.y;
@@ -68,17 +68,17 @@ Mat4 Mat4::rotation(const Quaternion& q)
     const float wy = q.w * q.y;
     const float wz = q.w * q.z;
 
-    result[0][0] = 1.0f - 2.0f * (yy + zz);
-    result[0][1] = 2.0f * (xy - wz);
-    result[0][2] = 2.0f * (xz + wy);
+    result(0, 0) = 1.0f - 2.0f * (yy + zz);
+    result(0, 1) = 2.0f * (xy - wz);
+    result(0, 2) = 2.0f * (xz + wy);
 
-    result[1][0] = 2.0f * (xy + wz);
-    result[1][1] = 1.0f - 2.0f * (xx + zz);
-    result[1][2] = 2.0f * (yz - wx);
+    result(1, 0) = 2.0f * (xy + wz);
+    result(1, 1) = 1.0f - 2.0f * (xx + zz);
+    result(1, 2) = 2.0f * (yz - wx);
 
-    result[2][0] = 2.0f * (xz - wy);
-    result[2][1] = 2.0f * (yz + wx);
-    result[2][2] = 1.0f - 2.0f * (xx + yy);
+    result(2, 0) = 2.0f * (xz - wy);
+    result(2, 1) = 2.0f * (yz + wx);
+    result(2, 2) = 1.0f - 2.0f * (xx + yy);
 
     return result;
 }
@@ -410,14 +410,14 @@ Mat4& Mat4::operator*=(const Mat4& other)
     return *this;
 }
 
-float* Mat4::operator[](int row)
+float* Mat4::operator[](int column)
 {
-    return &m[row * 4];
+    return &m[column * 4];
 }
 
-const float* Mat4::operator[](int row) const
+const float* Mat4::operator[](int column) const
 {
-    return &m[row * 4];
+    return &m[column * 4];
 }
 
 float& Mat4::operator()(
@@ -434,11 +434,6 @@ float Mat4::operator()(
 ) const
 {
     return m[column * 4 + row];
-}
-
-const float* Mat4::data() const
-{
-    return m;
 }
 
 float* Mat4::data()

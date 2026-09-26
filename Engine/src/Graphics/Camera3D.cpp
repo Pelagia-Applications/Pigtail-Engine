@@ -110,21 +110,23 @@ Mat4 Camera3D::projectionMatrix() const
 
     Mat4 result(0.0f);
 
-    result[0][0] =
-        1.0f / (m_aspectRatio * tanHalfFov);
+    result(0, 0) =
+        1.0f /
+        (m_aspectRatio * tanHalfFov);
 
-    result[1][1] =
-        1.0f / tanHalfFov;
+    result(1, 1) =
+        1.0f /
+        tanHalfFov;
 
-    result[2][2] =
+    result(2, 2) =
         -(m_farPlane + m_nearPlane) /
         (m_farPlane - m_nearPlane);
 
-    result[2][3] =
+    result(2, 3) =
         -(2.0f * m_farPlane * m_nearPlane) /
         (m_farPlane - m_nearPlane);
 
-    result[3][2] = -1.0f;
+    result(3, 2) = -1.0f;
 
     return result;
 }
