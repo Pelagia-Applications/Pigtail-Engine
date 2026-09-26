@@ -1,6 +1,7 @@
 #include <Core/Application.hpp>
 #include <Core/Input.hpp>
 #include <Core/Logger.hpp>
+#include <Core/ShapeRenderer.hpp>
 #include <Window/Window.hpp>
 #include <Graphics/Renderer.hpp>
 #include <Graphics/GLContext.hpp>
@@ -84,6 +85,15 @@ bool Pigtail::Application::initialize()
         return false;
     }
 
+    if (!m_shapeRenderer.initialize())
+    {
+        Logger::error(
+            "Failed to initialize shape renderer."
+        );
+
+        return false;
+    }
+
     m_running = true;
 
     Logger::info(
@@ -109,6 +119,37 @@ void Pigtail::Application::run()
         m_renderer->beginFrame();
 
         m_renderer->clear();
+
+        m_shapeRenderer.begin(m_camera);
+
+        m_shapeRenderer.drawRectangle(
+            glm::vec2(0.0f, 0.0f),
+            glm::vec2(200.0f, 100.0f),
+            glm::vec4(1.0f, 0.2f, 0.2f, 1.0f)
+        );
+
+        m_shapeRenderer.drawRectangleOutline(
+            glm::vec2(0.0f, 0.0f),
+            glm::vec2(220.0f, 120.0f),
+            glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+            0.0f,
+            3.0f
+        );
+
+        m_shapeRenderer.drawLine(
+            glm::vec2(-300.0f, -100.0f),
+            glm::vec2(300.0f, -100.0f),
+            glm::vec4(0.2f, 1.0f, 0.2f, 1.0f),
+            4.0f
+        );
+
+        m_shapeRenderer.drawCircle(
+            glm::vec2(300.0f, 100.0f),
+            50.0f,
+            glm::vec4(0.2f, 0.5f, 1.0f, 1.0f)
+        );
+
+        m_shapeRenderer.end();
 
         m_renderer->endFrame();
 
@@ -139,6 +180,8 @@ void Pigtail::Application::shutdown()
 
         m_renderer.reset();
     }
+
+    m_shapeRenderer.shutdown();
 
     GLContext::shutdown();
 

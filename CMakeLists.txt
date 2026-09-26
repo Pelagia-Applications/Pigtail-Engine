@@ -56,6 +56,7 @@ add_library(PigtailEngine STATIC
     Engine/src/Graphics/Mesh.cpp
     Engine/src/Graphics/Shader.cpp
     Engine/src/Graphics/Texture.cpp
+    Engine/src/Graphics/ShapeRenderer.cpp
 
     # Physics
     Engine/src/Physics/PhysicsWorld.cpp
