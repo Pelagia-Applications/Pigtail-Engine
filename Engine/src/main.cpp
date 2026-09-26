@@ -1,8 +1,8 @@
 #include "Core/Application.hpp"
 #include "Audio/Audio.hpp"
-#include "Math/Vector3.hpp"
-#include "Math/Vector4.hpp"
-#include "Math/Matrix4.hpp"
+#include "Math/Vec3.hpp"
+#include "Math/Vec4.hpp"
+#include "Math/Mat4.hpp"
 
 #include <iostream>
 
@@ -31,14 +31,14 @@ int main()
 
     using namespace Pigtail;
 
-    Vector3 position(10.0f, 5.0f, -2.0f);
+    Vec3 position(10.0f, 5.0f, -2.0f);
 
-    Matrix4 transform =
-        Matrix4::translation(position);
+    Mat4 transform =
+        Mat4::translation(position);
 
-    Vector4 point(0.0f, 0.0f, 0.0f, 1.0f);
+    Vec4 point(0.0f, 0.0f, 0.0f, 1.0f);
 
-    Vector4 result = transform * point;
+    Vec4 result = transform * point;
 
     std::cout
         << result.x << ", "

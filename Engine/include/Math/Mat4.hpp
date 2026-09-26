@@ -2,6 +2,7 @@
 
 #include "Math/Vec3.hpp"
 #include "Math/Vec4.hpp"
+#include "Math/Quaternion.hpp"
 
 namespace Pigtail
 {
@@ -25,17 +26,7 @@ public:
         const Vec3& scale
     );
 
-    static Mat4 rotationX(
-        float radians
-    );
-
-    static Mat4 rotationY(
-        float radians
-    );
-
-    static Mat4 rotationZ(
-        float radians
-    );
+    static Mat4 rotation(const Quaternion& rotation);
 
     static Mat4 perspective(
         float fovRadians,
@@ -67,6 +58,9 @@ public:
     Mat4 operator*(const Mat4& other) const;
 
     Mat4& operator*=(const Mat4& other);
+
+    float* operator[](int row);
+    const float* operator[](int row) const;
 
     float& operator()(int row, int column);
     float operator()(int row, int column) const;

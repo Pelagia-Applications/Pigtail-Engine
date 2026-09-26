@@ -52,53 +52,33 @@ Mat4 Mat4::scale(
     return result;
 }
 
-Mat4 Mat4::rotationX(
-    float radians
-)
+Mat4 Mat4::rotation(const Quaternion& q)
 {
-    Mat4 result = Mat4::identity();
+    Mat4 result(1.0f);
 
-    const float c = std::cos(radians);
-    const float s = std::sin(radians);
+    const float xx = q.x * q.x;
+    const float yy = q.y * q.y;
+    const float zz = q.z * q.z;
 
-    result.m[5]  = c;
-    result.m[6]  = s;
-    result.m[9]  = -s;
-    result.m[10] = c;
+    const float xy = q.x * q.y;
+    const float xz = q.x * q.z;
+    const float yz = q.y * q.z;
 
-    return result;
-}
+    const float wx = q.w * q.x;
+    const float wy = q.w * q.y;
+    const float wz = q.w * q.z;
 
-Mat4 Mat4::rotationY(
-    float radians
-)
-{
-    Mat4 result = Mat4::identity();
+    result[0][0] = 1.0f - 2.0f * (yy + zz);
+    result[0][1] = 2.0f * (xy - wz);
+    result[0][2] = 2.0f * (xz + wy);
 
-    const float c = std::cos(radians);
-    const float s = std::sin(radians);
+    result[1][0] = 2.0f * (xy + wz);
+    result[1][1] = 1.0f - 2.0f * (xx + zz);
+    result[1][2] = 2.0f * (yz - wx);
 
-    result.m[0]  = c;
-    result.m[2]  = -s;
-    result.m[8]  = s;
-    result.m[10] = c;
-
-    return result;
-}
-
-Mat4 Mat4::rotationZ(
-    float radians
-)
-{
-    Mat4 result = Mat4::identity();
-
-    const float c = std::cos(radians);
-    const float s = std::sin(radians);
-
-    result.m[0] = c;
-    result.m[1] = s;
-    result.m[4] = -s;
-    result.m[5] = c;
+    result[2][0] = 2.0f * (xz - wy);
+    result[2][1] = 2.0f * (yz + wx);
+    result[2][2] = 1.0f - 2.0f * (xx + yy);
 
     return result;
 }
@@ -428,6 +408,16 @@ Mat4& Mat4::operator*=(const Mat4& other)
     *this = *this * other;
 
     return *this;
+}
+
+float* Mat4::operator[](int row)
+{
+    return &m[row * 4];
+}
+
+const float* Mat4::operator[](int row) const
+{
+    return &m[row * 4];
 }
 
 float& Mat4::operator()(
