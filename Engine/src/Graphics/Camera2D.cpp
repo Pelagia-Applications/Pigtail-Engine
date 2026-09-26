@@ -1,4 +1,4 @@
-#include "Graphics/Camera.hpp"
+#include "Graphics/Camera2D.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -8,94 +8,94 @@
 namespace Pigtail
 {
 
-Camera::Camera(float width, float height)
+Camera2D::Camera2D(float width, float height)
     : m_width(width),
       m_height(height)
 {
 }
 
-void Camera::setPosition(float x, float y)
+void Camera2D::setPosition(float x, float y)
 {
     m_position = glm::vec2(x, y);
 }
 
-void Camera::setPosition(const glm::vec2& position)
+void Camera2D::setPosition(const glm::vec2& position)
 {
     m_position = position;
 }
 
-void Camera::move(float x, float y)
+void Camera2D::move(float x, float y)
 {
     m_position += glm::vec2(x, y);
 }
 
-void Camera::move(const glm::vec2& offset)
+void Camera2D::move(const glm::vec2& offset)
 {
     m_position += offset;
 }
 
-void Camera::setZoom(float zoom)
+void Camera2D::setZoom(float zoom)
 {
     m_zoom = std::max(zoom, 0.01f);
 }
 
-void Camera::zoom(float amount)
+void Camera2D::zoom(float amount)
 {
     setZoom(m_zoom + amount);
 }
 
-void Camera::setRotation(float degrees)
+void Camera2D::setRotation(float degrees)
 {
     m_rotation = degrees;
 }
 
-void Camera::rotate(float degrees)
+void Camera2D::rotate(float degrees)
 {
     m_rotation += degrees;
 }
 
-void Camera::resize(float width, float height)
+void Camera2D::resize(float width, float height)
 {
     m_width = std::max(width, 1.0f);
     m_height = std::max(height, 1.0f);
 }
 
-const glm::vec2& Camera::position() const
+const glm::vec2& Camera2D::position() const
 {
     return m_position;
 }
 
-float Camera::zoomLevel() const
+float Camera2D::zoomLevel() const
 {
     return m_zoom;
 }
 
-float Camera::rotation() const
+float Camera2D::rotation() const
 {
     return m_rotation;
 }
 
-float Camera::width() const
+float Camera2D::width() const
 {
     return m_width;
 }
 
-float Camera::height() const
+float Camera2D::height() const
 {
     return m_height;
 }
 
-glm::mat4 Camera::viewMatrix() const
+glm::mat4 Camera2D::viewMatrix() const
 {
     glm::mat4 view(1.0f);
 
-    // Move the world opposite to the camera.
+    // Move the world opposite to the Camera2D.
     view = glm::translate(
         view,
         glm::vec3(-m_position.x, -m_position.y, 0.0f)
     );
 
-    // Rotate the world opposite to the camera.
+    // Rotate the world opposite to the Camera2D.
     view = glm::rotate(
         view,
         glm::radians(-m_rotation),
@@ -111,7 +111,7 @@ glm::mat4 Camera::viewMatrix() const
     return view;
 }
 
-glm::mat4 Camera::projectionMatrix() const
+glm::mat4 Camera2D::projectionMatrix() const
 {
     const float halfWidth = m_width * 0.5f;
     const float halfHeight = m_height * 0.5f;
@@ -126,12 +126,12 @@ glm::mat4 Camera::projectionMatrix() const
     );
 }
 
-glm::mat4 Camera::viewProjectionMatrix() const
+glm::mat4 Camera2D::viewProjectionMatrix() const
 {
     return projectionMatrix() * viewMatrix();
 }
 
-glm::vec2 Camera::screenToWorld(float screenX, float screenY) const
+glm::vec2 Camera2D::screenToWorld(float screenX, float screenY) const
 {
     glm::mat4 inverse = glm::inverse(viewProjectionMatrix());
 
@@ -162,7 +162,7 @@ glm::vec2 Camera::screenToWorld(float screenX, float screenY) const
     );
 }
 
-glm::vec2 Camera::worldToScreen(float worldX, float worldY) const
+glm::vec2 Camera2D::worldToScreen(float worldX, float worldY) const
 {
     glm::vec4 worldPosition(
         worldX,

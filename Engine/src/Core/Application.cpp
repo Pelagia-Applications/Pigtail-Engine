@@ -12,7 +12,7 @@ namespace Pigtail
 {
 
 Pigtail::Application::Application()
-    : m_camera(1280.0f, 720.0f)
+    : m_Camera2D(1280.0f, 720.0f)
 {
 }
 
@@ -136,7 +136,7 @@ void Pigtail::Application::run()
 
         m_renderer->clear();
 
-        m_shapeRenderer.begin(m_camera);
+        m_shapeRenderer.begin(m_Camera2D);
 
         m_shapeRenderer.drawRectangle(
             glm::vec2(0.0f, 0.0f),

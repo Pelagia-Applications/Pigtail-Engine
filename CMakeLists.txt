@@ -52,7 +52,8 @@ add_library(PigtailEngine STATIC
     # Graphics
     Engine/src/Graphics/GLContext.cpp
     Engine/src/Graphics/Renderer.cpp
-    Engine/src/Graphics/Camera.cpp
+    Engine/src/Graphics/Camera2D.cpp
+    Engine/src/Graphics/Camera3D.cpp
     Engine/src/Graphics/Mesh.cpp
     Engine/src/Graphics/Shader.cpp
     Engine/src/Graphics/Texture.cpp

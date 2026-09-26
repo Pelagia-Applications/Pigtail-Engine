@@ -8,7 +8,7 @@
 namespace Pigtail
 {
 
-class Camera;
+class Camera2D;
 class Shader;
 
 class ShapeRenderer
@@ -23,7 +23,7 @@ public:
     bool initialize();
     void shutdown();
 
-    void begin(const Camera& camera);
+    void begin(const Camera2D& Camera2D);
     void end();
 
     void drawRectangle(
@@ -71,7 +71,7 @@ private:
     GLuint m_vbo;
 
     Shader* m_shader;
-    const Camera* m_camera;
+    const Camera2D* m_Camera2D;
 
     bool m_initialized;
     bool m_drawing;

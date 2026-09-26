@@ -6,10 +6,10 @@
 namespace Pigtail
 {
 
-class Camera
+class Camera2D
 {
 public:
-    Camera(float width, float height);
+    Camera2D(float width, float height);
 
     void setPosition(float x, float y);
     void setPosition(const glm::vec2& position);

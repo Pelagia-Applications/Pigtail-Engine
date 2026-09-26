@@ -5,7 +5,7 @@
 #include <Core/ShapeRenderer.hpp>
 #include <Window/Window.hpp>
 #include <Graphics/Renderer.hpp>
-#include <Graphics/Camera.hpp>
+#include <Graphics/Camera2D.hpp>
 
 namespace Pigtail
 {
@@ -37,7 +37,7 @@ private:
 
     bool m_running = false;
     
-    Camera m_camera;
+    Camera2D m_Camera2D;
 };
 
 }

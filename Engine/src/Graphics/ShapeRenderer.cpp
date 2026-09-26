@@ -1,6 +1,6 @@
 #include "Core/ShapeRenderer.hpp"
 
-#include "Graphics/Camera.hpp"
+#include "Graphics/Camera2D.hpp"
 #include "Graphics/Shader.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -14,7 +14,7 @@ ShapeRenderer::ShapeRenderer()
     : m_vao(0),
       m_vbo(0),
       m_shader(nullptr),
-      m_camera(nullptr),
+      m_Camera2D(nullptr),
       m_initialized(false),
       m_drawing(false)
 {
@@ -59,7 +59,7 @@ void ShapeRenderer::shutdown()
     delete m_shader;
     m_shader = nullptr;
 
-    m_camera = nullptr;
+    m_Camera2D = nullptr;
     m_drawing = false;
     m_initialized = false;
 }
@@ -110,19 +110,19 @@ void ShapeRenderer::destroyBuffers()
     }
 }
 
-void ShapeRenderer::begin(const Camera& camera)
+void ShapeRenderer::begin(const Camera2D& Camera2D)
 {
     if (!m_initialized || m_shader == nullptr)
         return;
 
-    m_camera = &camera;
+    m_Camera2D = &Camera2D;
     m_drawing = true;
 
     m_shader->bind();
 
     m_shader->setMat4(
         "u_viewProjection",
-        camera.viewProjectionMatrix()
+        Camera2D.viewProjectionMatrix()
     );
 
     glBindVertexArray(m_vao);
@@ -138,7 +138,7 @@ void ShapeRenderer::end()
     if (m_shader)
         m_shader->unbind();
 
-    m_camera = nullptr;
+    m_Camera2D = nullptr;
     m_drawing = false;
 }
 
